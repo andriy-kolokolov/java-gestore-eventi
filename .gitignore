@@ -27,3 +27,8 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/.idea/aws.xml
+/.idea/misc.xml
+/java-gestore-eventi.iml
+/.idea/modules.xml
+/.idea/vcs.xml
