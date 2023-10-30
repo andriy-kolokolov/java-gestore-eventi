@@ -7,6 +7,6 @@ public class DuplicateIdException extends Exception {
     }
 
     public DuplicateIdException() {
-        super("Duplicate ID violation.");
+        super("Error inserting event. Duplicate ID violation.");
     }
 }

@@ -1,27 +1,39 @@
 package org.experis.eventsmanager;
 
-import org.experis.eventsmanager.exceptions.DuplicateIdException;
-import org.experis.eventsmanager.exceptions.EventNotFoundException;
-
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class Event implements IEventManager {
+public class Event {
     private static int NEXT_ID = 1; // static variable to hold the next available ID
     private final int id;
     private String title;
     private String date;
-    private final int availableSeats;
+    private int availableSeats;
     private int reservedSeats;
     private final ArrayList<Reservation> reservations;
 
+    public Event() {
+        this.id = NEXT_ID++;
+        this.reservedSeats = 0;
+        this.reservations = new ArrayList<>();
+    }
+
     public Event(String title, String date, int availableSeats) {
-        this.id = NEXT_ID++; // assign the next ID and increment it
+        this(); // calls the default constructor
         this.title = title;
         this.date = date;
         this.availableSeats = availableSeats;
-        this.reservedSeats = 0; // default value for reservedSeats
-        this.reservations = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return "{\n" +
+                "\t\"id\": \"" + id + "\",\n" +
+                "\t\"title\": \"" + title + "\",\n" +
+                "\t\"date\": \"" + date + "\",\n" +
+                "\t\"availableSeats\": " + availableSeats + ",\n" +
+                "\t\"reservedSeats\": " + reservedSeats + ",\n" +
+                "\t\"reservations\": " + printReservations() + "\n" +
+                "}";
     }
 
     public int getId() {
@@ -32,70 +44,50 @@ public class Event implements IEventManager {
         return title;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public int getAvailableSeats() {
-        return availableSeats;
-    }
-
-    public int getReservedSeats() {
-        return reservedSeats;
-    }
-
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDate() {
+        return date;
     }
 
     public void setDate(String date) {
         this.date = date;
     }
 
+    public int getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void setAvailableSeats(int availableSeats) {
+        this.availableSeats = availableSeats;
+    }
+
+    public int getReservedSeats() {
+        return reservedSeats;
+    }
+
     public ArrayList<Reservation> getReservations() {
         return reservations;
     }
 
-    @Override
-    public void create(Event event) throws DuplicateIdException {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Creating event..");
-
-        System.out.println("Insert event title: ");
-        String title = sc.nextLine();
-
-        System.out.println("Insert event date (yyyy-mm-dd): ");
-        String date = sc.nextLine();
-
-        System.out.println("Insert available seats: ");
-        int availableSeats = sc.nextInt();
-
-        Event newEvent = new Event(title, date, availableSeats);
-        DB.addEvent(newEvent);
-
-        System.out.println("Event created with ID: " + newEvent.getId());
-    }
-
-    @Override
-    public boolean destroy(String title) throws EventNotFoundException {
-        return DB.removeEventByTitle(title);
-    }
-
-    public boolean createReservation() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Insert number of people to reserve seats: ");
-        int numberOfPeople = sc.nextInt();
-        // Check if enough seats are available
-        if (numberOfPeople <= (availableSeats - reservedSeats)) {
-            System.out.printf("Creating new reservation for event '%s' ", title);
-            Reservation reservation = new Reservation();
-            reservation.create(numberOfPeople);
-            reservations.add(reservation);
-            reservedSeats += numberOfPeople;
-            return true;
-        } else {
-            System.out.println("Not enough seats available for this reservation.");
-            return false;
+    public String printReservations() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n\t");
+        for (int i = 0; i < reservations.size(); i++) {
+            sb.append("\t\t").append(reservations.get(i).toString());
+            if (i < reservations.size() - 1) {
+                sb.append(",\t\n");
+            }
         }
+        sb.append("\n\t]");
+        return sb.toString();
+    }
+
+    public void addReservation(Reservation reservation) {
+        reservations.add(reservation);
+        reservedSeats += reservation.getSeats();
+        availableSeats -= reservation.getSeats();
     }
 }

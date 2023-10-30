@@ -8,27 +8,42 @@ public class Reservation {
     public ArrayList<String> names;
 
     public Reservation() {
+        seats = 0;
         names = new ArrayList<>();
     }
 
-    /**************************************************
-    * create reservation for N persons
-    **************************************************/
-    public void create(int persons) {
-        Scanner sc = new Scanner(System.in);
-        for (int i = 1; i <= persons; i++) {
-            System.out.printf("Insert %s person name", i);
-            names.add(sc.nextLine());
-            seats++;
-        }
-        sc.close();
+    @Override
+    public String toString() {
+        return "{\n" +
+                "\t\t\"seats number\": " + seats + ",\n" +
+                "\t\t\"names\": [" + printNames() + "]\n" +
+                "\t}";
+    }
+
+    public void setSeats(int seats) {
+        this.seats = seats;
     }
 
     public int getSeats() {
         return seats;
     }
 
+    public void setNames(ArrayList<String> names) {
+        this.names = names;
+    }
+
     public ArrayList<String> getNames() {
         return names;
+    }
+
+    public String printNames() {
+        StringBuilder namesBuilder = new StringBuilder();
+        for (int i = 0; i < names.size(); i++) {
+            namesBuilder.append("\"").append(names.get(i)).append("\"");
+            if (i < names.size() - 1) {
+                namesBuilder.append(", ");
+            }
+        }
+        return namesBuilder.toString();
     }
 }
