@@ -19,6 +19,18 @@ public class Prompt {
         eventService.createEvent();
     }
 
+    public static void deleteEvent() {
+        System.out.println("Insert event title: ");
+        try {
+            System.out.println("Deleting event..");
+            eventService.destroyEvent(sc.nextLine());
+            System.out.println("Event deleted successfully.");
+        } catch (EventNotFoundException e) {
+            System.err.println(e.getMessage());
+            System.err.println("Error deleting event");
+        }
+    }
+
     public static void printEvents() {
         System.out.println("Printing events.. ");
         DBUtil.printEvents();
@@ -45,8 +57,9 @@ public class Prompt {
             System.out.println("-------------------- MENU ----------------------");
             System.out.println("Welcome to the event manager");
             System.out.println("1. Create event");
-            System.out.println("2. Print events");
-            System.out.println("3. Add reservation to event");
+            System.out.println("2. Delete event");
+            System.out.println("3. Print events");
+            System.out.println("4. Add reservation to event");
             System.out.println("0. Exit");
             System.out.println("Enter your choice: ");
 
@@ -61,9 +74,12 @@ public class Prompt {
                         createEvent();
                         break;
                     case 2:
-                        printEvents();
+                        deleteEvent();
                         break;
                     case 3:
+                        printEvents();
+                        break;
+                    case 4:
                         eventAddReservation();
                         break;
                     default:
