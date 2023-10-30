@@ -1,5 +1,7 @@
 package org.experis.eventsmanager;
 
+import org.experis.eventsmanager.exceptions.NoMoreAvailableSeatsForReservation;
+
 import java.util.ArrayList;
 
 public class Event {
@@ -74,7 +76,7 @@ public class Event {
 
     public String printReservations() {
         StringBuilder sb = new StringBuilder();
-        sb.append("[\n\t");
+        sb.append("[\n");
         for (int i = 0; i < reservations.size(); i++) {
             sb.append("\t\t").append(reservations.get(i).toString());
             if (i < reservations.size() - 1) {
@@ -86,8 +88,18 @@ public class Event {
     }
 
     public void addReservation(Reservation reservation) {
-        reservations.add(reservation);
-        reservedSeats += reservation.getSeats();
-        availableSeats -= reservation.getSeats();
+        try {
+            if (reservation.getSeats() > availableSeats) {
+                throw new NoMoreAvailableSeatsForReservation();
+            }
+            reservations.add(reservation);
+            reservedSeats += reservation.getSeats();
+            availableSeats -= reservation.getSeats();
+
+        } catch (NoMoreAvailableSeatsForReservation e) {
+            System.out.println(e.getMessage());
+            System.err.printf("Failed creating new reservation for event: '%s' \n", title);
+            return; // exit the method without adding the reservation to the list of reservations
+        }
     }
 }

@@ -9,11 +9,15 @@ public class DBUtil {
     public static void printEvents() {
         HashMap<Integer, Event> eventsData = DB.get();
 
-        System.out.println("----------------- EVENTS -----------------------");
-        for (Event event : eventsData.values()) {
-            System.out.println(event.toString());
+        if (!eventsData.isEmpty()) {
+            System.out.println("----------------- EVENTS -----------------------");
+            for (Event event : eventsData.values()) {
+                System.out.println(event.toString());
+            }
+            System.out.println("------------------------------------------------");
+        } else {
+            System.err.println("EVENTS DATA IS EMPTY");
         }
-        System.out.println("------------------------------------------------");
 
     }
 

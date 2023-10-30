@@ -15,9 +15,9 @@ public class Reservation {
     @Override
     public String toString() {
         return "{\n" +
-                "\t\t\"seats number\": " + seats + ",\n" +
-                "\t\t\"names\": [" + printNames() + "]\n" +
-                "\t}";
+                "\t\t\t\"seats number\": " + seats + ",\n" +
+                "\t\t\t\"names\": [" + printNames() + "]\n" +
+                "\t\t}";
     }
 
     public void setSeats(int seats) {
